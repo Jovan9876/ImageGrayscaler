@@ -3,8 +3,8 @@
  * File Name: IOhandler.js
  * Description: Collection of functions for files input/output related operations
  *
- * Created Date:
- * Author:
+ * Created Date: November 22
+ * Author: Jovan Sandhu
  *
  */
 
