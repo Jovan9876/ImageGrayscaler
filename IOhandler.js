@@ -20,7 +20,12 @@ const unzipper = require("unzipper"),
  * @param {string} pathOut
  * @return {promise}
  */
-const unzip = (pathIn, pathOut) => {};
+const unzip = (pathIn, pathOut) => {
+  fs.createReadStream(pathIn)
+  .pipe(unzipper.Extract({ path: pathOut }));
+};
+
+unzip("./myfile.zip", "unzipped")
 
 /**
  * Description: read all the png files from given directory and return Promise containing array of each png file path
@@ -28,7 +33,9 @@ const unzip = (pathIn, pathOut) => {};
  * @param {string} path
  * @return {promise}
  */
-const readDir = (dir) => {};
+const readDir = (dir) => {
+  //return paths of all png images
+};
 
 /**
  * Description: Read in png file by given pathIn,
