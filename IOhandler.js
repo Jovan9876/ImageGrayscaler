@@ -21,12 +21,14 @@ const unzipper = require("unzipper"),
  * @return {promise}
  */
 const unzip = (pathIn, pathOut) => {
-  fs.createReadStream(pathIn).pipe(unzipper.Extract({ path: pathOut }));
-  console.log("Extraction operation complete");
-  return pathOut;
+  return new Promise((resolve, reject) => {
+    fs.createReadStream(pathIn).pipe(unzipper.Extract({ path: pathOut }));
+    console.log("Extraction operation complete");
+    resolve(pathOut)
+  })
 };
 
-pathOut = unzip("./myfile.zip", "unzipped");
+// let pathOut = unzip("./myfile.zip", "unzipped")
 
 /**
  * Description: read all the png files from given directory and return Promise containing array of each png file path
@@ -51,7 +53,7 @@ const readDir = (dir) => {
     });
 };
 
-readDir(pathOut);
+// readDir(pathOut);
 /**
  * Description: Read in png file by given pathIn,
  * convert to grayscale and write to given pathOut
