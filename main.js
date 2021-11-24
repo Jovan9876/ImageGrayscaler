@@ -20,7 +20,7 @@ IOhandler.unzip("./myfile.zip", "unzipped")
     return images;
   })
   .then((images) => {
-    let count = 0
+    let count = 1
     for (let i of images) {
       string = i.toString()
       IOhandler.grayScale(string, `gray${count}.png`)

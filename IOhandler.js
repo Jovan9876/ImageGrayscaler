@@ -66,31 +66,41 @@ const readDir = (dir) => {
  * @return {promise}
  */
 const grayScale = (pathIn, pathOut) => {
+  let sum = 0;
   fs.createReadStream(pathIn)
-  .pipe(new PNG({
-      filterType: 4
-  }))
-  .on('parsed', function() {
-
+    .pipe(
+      new PNG({
+        filterType: 4,
+      })
+    )
+    .on("parsed", function () {
       for (var y = 0; y < this.height; y++) {
-          for (var x = 0; x < this.width; x++) {
-              var idx = (this.width * y + x) << 2;
+        for (var x = 0; x < this.width; x++) {
+          var idx = (this.width * y + x) << 2;
 
-              // invert color
-              this.data[idx] = 255 - this.data[idx];
-              this.data[idx+1] = 255 - this.data[idx+1];
-              this.data[idx+2] = 255 - this.data[idx+2];
+          // invert color
 
-              // and reduce opacity
-              this.data[idx+3] = this.data[idx+3] >> 1;
-          }
+          let gray =
+            255 -
+            this.data[idx] +
+            255 -
+            this.data[idx + 1] +
+            255 -
+            this.data[idx + 2];
+
+          this.data[idx] = gray;
+          this.data[idx + 1] = gray;
+          this.data[idx + 2] = gray;
+
+          // and reduce opacity
+          this.data[idx + 3] = this.data[idx + 3] >> 1;
+        }
       }
-
       this.pack().pipe(fs.createWriteStream(pathOut));
-  })
-  .on("error", function(err) {
-    console.error(err)
-  })
+    })
+    .on("error", function (err) {
+      console.error(err);
+    });
 };
 
 module.exports = {
