@@ -7,6 +7,7 @@
  * Author: Jovan Sandhu
  *
  */
+path = require("path");
 
 const IOhandler = require("./IOhandler"),
   zipFilePath = `${__dirname}/myfile.zip`,
@@ -14,7 +15,19 @@ const IOhandler = require("./IOhandler"),
   pathProcessed = `${__dirname}/grayscaled`;
 
 IOhandler.unzip("./myfile.zip", "unzipped")
-.then((pathOut) => {
-  IOhandler.readDir(pathOut);
-});
-// .then(IOhandler.grayScale())
+  .then((pathOut) => {
+    let images = IOhandler.readDir(pathOut);
+    return images;
+  })
+  .then((images) => {
+    let count = 0
+    for (let i of images) {
+      string = i.toString()
+      IOhandler.grayScale(string, `gray${count}.png`)
+      count += 1
+    }
+
+  })
+  .catch((err) => {
+    console.error(err);
+  });

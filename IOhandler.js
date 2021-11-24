@@ -8,6 +8,7 @@
  *
  */
 
+const { resolve } = require("path");
 const unzipper = require("unzipper"),
   fs = require("fs"),
   PNG = require("pngjs").PNG,
@@ -24,8 +25,8 @@ const unzip = (pathIn, pathOut) => {
   return new Promise((resolve, reject) => {
     fs.createReadStream(pathIn).pipe(unzipper.Extract({ path: pathOut }));
     console.log("Extraction operation complete");
-    resolve(pathOut)
-  })
+    resolve(pathOut);
+  });
 };
 
 // let pathOut = unzip("./myfile.zip", "unzipped")
@@ -36,21 +37,23 @@ const unzip = (pathIn, pathOut) => {
  * @param {string} path
  * @return {promise}
  */
+
 const readDir = (dir) => {
-  fs.promises
-    .readdir(dir)
-    .then((files) => {
-      images = []
-      files.forEach((file) => {
-        if (file.includes(".png")) {
-          images.push(dir + path.sep + file)
-        }
-      })
-      console.log(images)
-    })
-    .catch((err) => {
-      console.log(err);
+  return new Promise((resolve, reject) => {
+    let images = [];
+    fs.readdir(dir, (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        data.forEach((file) => {
+          if (file.includes(".png")) {
+            images.push(dir + path.sep + file);
+          }
+        });
+        resolve(images);
+      }
     });
+  });
 };
 
 // readDir(pathOut);
@@ -64,28 +67,30 @@ const readDir = (dir) => {
  */
 const grayScale = (pathIn, pathOut) => {
   fs.createReadStream(pathIn)
-    .pipe(
-      new PNG({
-        filterType: 4,
-      })
-    )
-    .on("parsed", function () {
+  .pipe(new PNG({
+      filterType: 4
+  }))
+  .on('parsed', function() {
+
       for (var y = 0; y < this.height; y++) {
-        for (var x = 0; x < this.width; x++) {
-          var idx = (this.width * y + x) << 2;
+          for (var x = 0; x < this.width; x++) {
+              var idx = (this.width * y + x) << 2;
 
-          // invert color
-          this.data[idx] = 255 - this.data[idx];
-          this.data[idx + 1] = 255 - this.data[idx + 1];
-          this.data[idx + 2] = 255 - this.data[idx + 2];
+              // invert color
+              this.data[idx] = 255 - this.data[idx];
+              this.data[idx+1] = 255 - this.data[idx+1];
+              this.data[idx+2] = 255 - this.data[idx+2];
 
-          // and reduce opacity
-          this.data[idx + 3] = this.data[idx + 3] >> 1;
-        }
+              // and reduce opacity
+              this.data[idx+3] = this.data[idx+3] >> 1;
+          }
       }
 
       this.pack().pipe(fs.createWriteStream(pathOut));
-    });
+  })
+  .on("error", function(err) {
+    console.error(err)
+  })
 };
 
 module.exports = {
