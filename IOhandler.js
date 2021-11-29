@@ -29,8 +29,6 @@ const unzip = (pathIn, pathOut) => {
   });
 };
 
-// let pathOut = unzip("./myfile.zip", "unzipped")
-
 /**
  * Description: read all the png files from given directory and return Promise containing array of each png file path
  *
@@ -56,7 +54,6 @@ const readDir = (dir) => {
   });
 };
 
-// readDir(pathOut);
 /**
  * Description: Read in png file by given pathIn,
  * convert to grayscale and write to given pathOut
@@ -66,7 +63,6 @@ const readDir = (dir) => {
  * @return {promise}
  */
 const grayScale = (pathIn, pathOut) => {
-  let sum = 0;
   fs.createReadStream(pathIn)
     .pipe(
       new PNG({

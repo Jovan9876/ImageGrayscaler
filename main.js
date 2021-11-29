@@ -14,19 +14,18 @@ const IOhandler = require("./IOhandler"),
   pathUnzipped = `${__dirname}/unzipped`,
   pathProcessed = `${__dirname}/grayscaled`;
 
-IOhandler.unzip("./myfile.zip", "unzipped")
+IOhandler.unzip(zipFilePath, pathUnzipped)
   .then((pathOut) => {
     let images = IOhandler.readDir(pathOut);
     return images;
   })
   .then((images) => {
-    let count = 1
+    let count = 1;
     for (let i of images) {
-      string = i.toString()
-      IOhandler.grayScale(string, `gray${count}.png`)
-      count += 1
+      string = i.toString();
+      IOhandler.grayScale(string, `gray${count}.png`);
+      count += 1;
     }
-
   })
   .catch((err) => {
     console.error(err);
